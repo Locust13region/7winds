@@ -1,0 +1,27 @@
+meta {
+  name: createRow
+  type: http
+  seq: 4
+}
+
+post {
+  url: {{base}}/v1/outlay-rows/entity/{{eID}}/row/create
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "equipmentCosts": 0,
+    "estimatedProfit": 0,
+    "machineOperatorSalary": 0,
+    "mainCosts": 0,
+    "materials": 0,
+    "mimExploitation": 0,
+    "overheads": 0,
+    "parentId": null,
+    "rowName": "first",
+    "salary": 0,
+    "supportCosts": 0
+  }
+}

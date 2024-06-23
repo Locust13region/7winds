@@ -1,0 +1,15 @@
+meta {
+  name: deleteRow
+  type: http
+  seq: 5
+}
+
+delete {
+  url: {{base}}/v1/outlay-rows/entity/{{eID}}/row/{{rID}}/delete
+  body: none
+  auth: none
+}
+
+vars:pre-request {
+  rID: 86771
+}
