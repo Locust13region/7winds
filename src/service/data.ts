@@ -4,7 +4,7 @@ export const newRow: IRow = {
 	id: 0,
 	rowName: "",
 	total: 0,
-	salary: 0,
+	salary: 1,
 	mimExploitation: 0,
 	machineOperatorSalary: 0,
 	materials: 0,

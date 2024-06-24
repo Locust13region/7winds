@@ -11,7 +11,6 @@ export const getListRequest = async () => {
 			throw new Error(response.statusText);
 		}
 		const result = await response.json();
-		// console.log("getRequest:", result);
 		return result;
 	} catch (error) {
 		console.log("Fetch", error);

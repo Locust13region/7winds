@@ -98,20 +98,32 @@ const Content = () => {
 		});
 	};
 
-	const renderRows = (data: IRow[], depth = 0): JSX.Element => {
+	const renderRows = (
+		data: IRow[],
+		depth: number,
+		parentChields: number,
+		connectors: boolean[]
+	): JSX.Element => {
 		if (data.length === 0) {
-			return <>{renderRow(newRow, depth)}</>;
+			return <>{renderRow(newRow, depth, parentChields, 0, connectors)}</>;
 		}
 		return (
 			<>
-				{data.map((row) => {
+				{data.map((row, index) => {
 					if (row.child.length === 0) {
-						return <Fragment key={row.id}>{renderRow(row, depth)}</Fragment>;
+						return (
+							<Fragment key={row.id}>
+								{renderRow(row, depth, parentChields, index, connectors)}
+							</Fragment>
+						);
 					} else {
 						return (
 							<Fragment key={row.id}>
-								{row && renderRow(row, depth)}
-								{row && renderRows(row.child, depth + 3)}
+								{renderRow(row, depth, parentChields, index, connectors)}
+								{renderRows(row.child, depth + 1, row.child.length, [
+									...connectors,
+									parentChields - (index + 1) !== 0 ? true : false,
+								])}
 							</Fragment>
 						);
 					}
@@ -120,7 +132,13 @@ const Content = () => {
 		);
 	};
 
-	const renderRow = (row: IRow, depth: number) => {
+	const renderRow = (
+		row: IRow,
+		depth: number,
+		parentChields: number,
+		index: number,
+		connectors: boolean[]
+	) => {
 		const editable = readonly === row.id ? true : false;
 		const showTrash = !editable && trash === row.id ? "visible" : "hidden";
 		return (
@@ -137,13 +155,13 @@ const Content = () => {
 					"&:last-child td, &:last-child th": { border: 0 },
 				}}
 			>
-				<TableCell sx={{ minWidth: 110 }}>
+				<TableCell sx={{ minWidth: 110, position: "relative" }}>
 					<Box
 						display={"flex"}
 						flexDirection={"row"}
 						gap={1}
 						onMouseLeave={handleHideTrash}
-						marginLeft={depth}
+						marginLeft={`${depth * 24}px`}
 					>
 						<IconButton
 							onMouseEnter={() => handleShowTrash(row.id)}
@@ -153,7 +171,7 @@ const Content = () => {
 								readonly === null && handleAddRow(row.id);
 							}}
 						>
-							<TextSnippetIcon />
+							<TextSnippetIcon sx={{ zIndex: 1 }} />
 						</IconButton>
 						<IconButton
 							sx={{
@@ -167,7 +185,38 @@ const Content = () => {
 						>
 							<DeleteOutlineIcon color="error" />
 						</IconButton>
-						{row.id}
+						{!!parentChields && (
+							<Box
+								sx={{
+									position: "absolute",
+									top: "-50%",
+									left: `${depth * 24 + 3}px`,
+									width: "16px",
+									height: "100%",
+									borderBottom: "2px solid grey",
+									borderLeft: "2px solid grey",
+								}}
+							/>
+						)}
+						{[...new Array(depth)].map((_, index) => {
+							const vc = connectors[index + 1]
+								? "2px solid grey"
+								: "2px solid trnsparent";
+							return (
+								<Box
+									key={index}
+									borderLeft={vc}
+									sx={{
+										boxSizing: "border-box",
+										position: "absolute",
+										top: "-50%",
+										left: `${(index + 1) * 24 + 3}px`,
+										width: "24px",
+										height: "120%",
+									}}
+								/>
+							);
+						})}
 					</Box>
 				</TableCell>
 				<TableCell
@@ -386,7 +435,7 @@ const Content = () => {
 								</TableCell>
 							</TableRow>
 						</TableHead>
-						<TableBody>{renderRows(data)}</TableBody>
+						<TableBody>{renderRows(data, 0, 0, [])}</TableBody>
 					</Table>
 				</TableContainer>
 			</Paper>
