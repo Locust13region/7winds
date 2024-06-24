@@ -105,7 +105,7 @@ const Content = () => {
 		connectors: boolean[]
 	): JSX.Element => {
 		if (data.length === 0) {
-			return <>{renderRow(newRow, depth, parentChields, 0, connectors)}</>;
+			return <>{renderRow(newRow, depth, parentChields, connectors)}</>;
 		}
 		return (
 			<>
@@ -113,13 +113,13 @@ const Content = () => {
 					if (row.child.length === 0) {
 						return (
 							<Fragment key={row.id}>
-								{renderRow(row, depth, parentChields, index, connectors)}
+								{renderRow(row, depth, parentChields, connectors)}
 							</Fragment>
 						);
 					} else {
 						return (
 							<Fragment key={row.id}>
-								{renderRow(row, depth, parentChields, index, connectors)}
+								{renderRow(row, depth, parentChields, connectors)}
 								{renderRows(row.child, depth + 1, row.child.length, [
 									...connectors,
 									parentChields - (index + 1) !== 0 ? true : false,
@@ -136,7 +136,7 @@ const Content = () => {
 		row: IRow,
 		depth: number,
 		parentChields: number,
-		index: number,
+		// index: number,
 		connectors: boolean[]
 	) => {
 		const editable = readonly === row.id ? true : false;
@@ -201,7 +201,7 @@ const Content = () => {
 						{[...new Array(depth)].map((_, index) => {
 							const vc = connectors[index + 1]
 								? "2px solid grey"
-								: "2px solid trnsparent";
+								: "2px solid transparent";
 							return (
 								<Box
 									key={index}
