@@ -7,5 +7,5 @@ export default defineConfig({
 	server: {
 		port: 5174,
 	},
-	base: "/7winds/",
+	// base: "/7winds/",
 });
